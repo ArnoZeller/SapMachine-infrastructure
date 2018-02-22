@@ -17,8 +17,8 @@ pipeline {
         stage('Copy Artifacts') {
             steps {
                 script {
-                    step ([$class: 'CopyArtifact'
-                    selector: BUILD_SELECTOR,
+                    step ([$class: 'CopyArtifact',
+                    BUILD_SELECTOR,
                     projectName: JDK_BUILD_JOB,
                     filter: "build.tar.gz",
                     target: 'sapmachine']);
