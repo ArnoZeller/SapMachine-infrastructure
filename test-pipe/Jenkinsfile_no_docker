@@ -13,12 +13,11 @@ pipeline {
                     target: 'sapmachine']);
                 }
                 sh 'cd sapmachine && unzip test.zip'
-                
-                script {
-                    def bundle=sh(script: 'ls -al sapmachine/bundles/*jdk-*', returnStdout: true).result
+                sh '''
+                    BUNDLE=`ls -al sapmachine/bundles/*jdk-*`
                     echo "${bundle}"
-                    sh 'unzip ${bundle}"'
-                }
+                    unzip ${bundle}"
+                '''
                 script {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
