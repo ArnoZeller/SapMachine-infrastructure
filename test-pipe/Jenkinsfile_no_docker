@@ -16,7 +16,7 @@ pipeline {
                 
                 def bundle=sh(script: 'ls -al sapmachine/bundles/*jdk-*', returnStdout: true).result
                 echo "${bundle}"
-                sh 'unzip ${bundle}"
+                sh 'unzip ${bundle}"'
                 script {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
