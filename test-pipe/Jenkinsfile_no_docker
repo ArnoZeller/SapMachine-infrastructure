@@ -2,7 +2,8 @@ pipeline {
     agent {
         label params.AGENT_LABEL
     }
-    stage('Copy Artifacts') {
+    stages {
+        stage('Copy Artifacts') {
             steps {
                 script {
                     step ([$class: 'CopyArtifact',
