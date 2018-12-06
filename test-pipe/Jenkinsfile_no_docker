@@ -15,8 +15,8 @@ pipeline {
                 sh 'cd sapmachine && unzip test.zip'
                 sh '''
                     BUNDLE=`ls -al sapmachine/bundles/*jdk-*`
-                    echo "${bundle}"
-                    unzip ${bundle}"
+                    echo "${BUNDLE}"
+                    unzip "${BUNDLE}"
                 '''
                 script {
                     step ([$class: 'CopyArtifact',
