@@ -2,25 +2,16 @@ pipeline {
     agent {
         label params.AGENT_LABEL
     }
-    stages {
-        stage('Prepare') {
-            environment {
-              SAPMACHINE_GIT_REPO = 'github.com/SAP/SapMachine.git'
-            }
-            steps {
-                sh 'bash test-pipe/test_jtreg_prepare.sh'
-            }
-        }
-        stage('Copy Artifacts') {
+    stage('Copy Artifacts') {
             steps {
                 script {
                     step ([$class: 'CopyArtifact',
                     selector: buildParameter("${BUILD_SELECTOR}"),
                     projectName: JDK_BUILD_JOB,
-                    filter: "build.tar.gz",
+                    filter: "test.zip",
                     target: 'sapmachine']);
                 }
-                sh 'cd sapmachine && tar xzf build.tar.gz'
+                sh 'cd sapmachine && unzip test.zip'
                 script {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
@@ -40,6 +31,7 @@ pipeline {
         }
         stage('Publish jtreg report') {
             steps {
+                junit 'JTwork/**/*.jtr.xml'
                 sh '''
                     ls -l
                     mkdir test_report
