@@ -12,6 +12,9 @@ pipeline {
                     target: 'sapmachine']);
                 }
                 sh 'cd sapmachine && unzip test.zip'
+                
+                var bundle=sh(script: 'ls -al sapmachine/bundles/*jdk-*.tar.gz', returnStdout: true).result
+                echo $bundle
                 script {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
