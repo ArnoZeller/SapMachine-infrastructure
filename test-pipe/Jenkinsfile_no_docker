@@ -31,8 +31,22 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
             }
             steps {
-                sh "bash test-pipe/run_jtreg.sh -l `pwd`/sapmachine -h `pwd`/sapmachine/jtreg -s ${params.test_suite} ${params.test_groups}  || true"
-            }
+                sh '''
+        			TEST_GROUPS=${params.test_groups}
+					TEST_SUITE=${params.test_suite}
+        			JT_HOME=${TESTDIR}/jtreg
+        			TEST_JDK=`pwd`/testJDK/"$(ls)"
+        			TEST_NATIVE_LIB=${TESTDIR}/test/${TEST_SUITE}/jtreg/native
+        			export PATH=${TEST_JDK}:$PATH
+                    export JT_JAVA=${TEST_JDK}
+                    export JAVA_HOME=${TEST_JDK}
+        			
+        			${JT_HOME}/bin/jtreg -dir:${TESTDIR}/test/${TEST_SUITE} -xml -verbose:summary \
+                    -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList.txt -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
+                    -conc:auto -vmoption:-Xmx640m \
+                    -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:${TEST_JDK} ${TEST_GROUPS} 
+                '''
+			}
         }
         stage('Publish jtreg report') {
             steps {
@@ -45,7 +59,6 @@ pipeline {
                     ls -l test_report/*
                     mv JTwork test_report
                 '''
-                sh "python lib/jtreg_to_junit.py test_report/JTreport/text/summary.txt junit_report.xml \"${params.test_suite}/${params.test_groups}\""
 
                 publishHTML target: [
                     allowMissing: false,
@@ -56,7 +69,6 @@ pipeline {
                     reportName: 'JT Report'
                 ]
 
-                junit 'junit_report.xml'
 
                 archive 'JTwork/**/hs_err_pid*.log'
             }
