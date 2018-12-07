@@ -34,7 +34,6 @@ pipeline {
             }
             steps {
                 sh '''
-		    env
 		    BASE=`pwd`
 		    JT_HOME=${BASE}/sapmachine/jtreg
 		    TEST_JDK="(ls ${BASE}/testJDK/)"
