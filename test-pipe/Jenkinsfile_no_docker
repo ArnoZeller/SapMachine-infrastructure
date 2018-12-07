@@ -31,9 +31,9 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
               TEST_GROUPS = "${params.test_groups}"
               TEST_SUITE = "${params.test_suite}"
-              BASE = `pwd`
-              JT_HOME="${BASE}/sapmachine/jtreg"
-              JDK_DIR = `ls ${BASE}/testJDK/`
+              BASE = "sh(script: 'pwd',returnStdout: true).trim()"
+              JT_HOME = "${BASE}/sapmachine/jtreg"
+              JDK_DIR = "sh(script: \"ls ${BASE}/testJDK/\",returnStdout: true).trim()
               TEST_JDK = "${BASE}" + '/testJDK/' + "${JDK_DIR}"
               TEST_NATIVE_LIB = "${BASE}" + '/test/' + "${params.test_suite}" + '/jtreg/native'
               JT_JAVA = "${TEST_JDK}"
