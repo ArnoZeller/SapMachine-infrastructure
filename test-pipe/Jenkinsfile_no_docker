@@ -36,7 +36,7 @@ pipeline {
                 sh '''
 		    BASE=`pwd`
 		    JT_HOME=${BASE}/sapmachine/jtreg
-		    TEST_JDK="(ls ${BASE}/testJDK/)"
+		    TEST_JDK=`ls ${BASE}/testJDK/`
                     TEST_NATIVE_LIB=${BASE}/test/${TEST_SUITE}/jtreg/native
 		    export PATH=${TEST_JDK}:$PATH
                     export JT_JAVA=${TEST_JDK}
