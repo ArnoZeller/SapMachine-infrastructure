@@ -32,16 +32,15 @@ pipeline {
             }
             steps {
                 sh '''
-        			TEST_GROUPS=${params.test_groups}
-					TEST_SUITE=${params.test_suite}
-        			JT_HOME=${TESTDIR}/jtreg
-        			TEST_JDK=`pwd`/testJDK/"$(ls)"
-        			TEST_NATIVE_LIB=${TESTDIR}/test/${TEST_SUITE}/jtreg/native
-        			export PATH=${TEST_JDK}:$PATH
+                    TEST_GROUPS="${params.test_groups}"
+                    TEST_SUITE="${params.test_suite}"
+		    JT_HOME=${TESTDIR}/jtreg
+		    TEST_JDK=`pwd`/testJDK/"$(ls)"
+                    TEST_NATIVE_LIB=${TESTDIR}/test/${TEST_SUITE}/jtreg/native
+		    export PATH=${TEST_JDK}:$PATH
                     export JT_JAVA=${TEST_JDK}
                     export JAVA_HOME=${TEST_JDK}
-        			
-        			${JT_HOME}/bin/jtreg -dir:${TESTDIR}/test/${TEST_SUITE} -xml -verbose:summary \
+        	    ${JT_HOME}/bin/jtreg -dir:${TESTDIR}/test/${TEST_SUITE} -xml -verbose:summary \
                     -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList.txt -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
                     -conc:auto -vmoption:-Xmx640m \
                     -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:${TEST_JDK} ${TEST_GROUPS} 
