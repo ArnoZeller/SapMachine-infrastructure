@@ -41,11 +41,12 @@ pipeline {
                        TEST_JDK=\${BASE}/testJDK/\${JDK_DIR}
                        TEST_NATIVE_LIB=\${BASE}/test/${params.test_suite}/jtreg/native
                        JT_JAVA=\${TEST_JDK}
-                       \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/\${TEST_SUITE} -xml -verbose:summary 
-                    -exclude:\${BASE}/sapmachine/test/\${TEST_SUITE}/ProblemList.txt -exclude:\${BASE}/sapmachine/test/\${TEST_SUITE}/ProblemList-SapMachine.txt 
-                    -conc:auto -vmoption:-Xmx640m 
-                    -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:\${TEST_JDK} \${TEST_GROUPS}
-					"""
+                       \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/\${TEST_SUITE} -xml -verbose:summary \\
+		       -exclude:\${BASE}/sapmachine/test/\${TEST_SUITE}/ProblemList.txt \\
+		       -exclude:\${BASE}/sapmachine/test/\${TEST_SUITE}/ProblemList-SapMachine.txt \\
+		       -conc:auto -vmoption:-Xmx640m \\
+                       -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:\${TEST_JDK} \${TEST_GROUPS}
+                    """
             }
         }
         stage('Publish jtreg report') {
