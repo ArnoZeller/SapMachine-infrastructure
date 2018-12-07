@@ -31,7 +31,7 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
               TEST_GROUPS = "${params.test_groups}"
               TEST_SUITE = "${params.test_suite}"
-              BASE = pwd()
+              BASE = sh(script: 'pwd',returnStdout: true).trim()
               JT_HOME="${BASE}/sapmachine/jtreg"
               JDK_DIR = sh(script: "ls ${BASE}/testJDK/",returnStdout: true).trim()
               TEST_JDK = "${BASE}" + '/testJDK/' + "${JDK_DIR}"
