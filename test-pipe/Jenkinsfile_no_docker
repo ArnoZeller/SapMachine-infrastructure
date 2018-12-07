@@ -33,8 +33,8 @@ pipeline {
               TEST_SUITE = "${params.test_suite}"
               BASE = pwd()
               JT_HOME="${BASE}/sapmachine/jtreg"
-              TEST_JDK = "${BASE/testJDK/ + sh(script: 'ls $BASE/testJDK/',returnStdout: true).trim()}"
-              TEST_NATIVE_LIB = "${BASE/test/ + ${params.test_suite} + /jtreg/native}"
+              TEST_JDK = "${BASE}" + '/testJDK/' + sh(script: "ls ${BASE}/testJDK/",returnStdout: true).trim()
+              TEST_NATIVE_LIB = "${BASE}" + '/test/' + ${params.test_suite} + '/jtreg/native'
               JT_JAVA = "${TEST_JDK}"
             }
             steps {
