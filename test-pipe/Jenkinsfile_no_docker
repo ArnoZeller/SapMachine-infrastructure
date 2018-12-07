@@ -31,15 +31,16 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
               TEST_GROUPS = "${params.test_groups}"
               TEST_SUITE = "${params.test_suite}"
-              BASE = sh(script: 'pwd',returnStdout: true).trim()
+              BASE = "sh(script: 'pwd',returnStdout: true).trim()"
               JT_HOME="${BASE}/sapmachine/jtreg"
-              JDK_DIR = sh(script: "ls ${BASE}/testJDK/",returnStdout: true).trim()
+              JDK_DIR = "sh(script: "ls ${BASE}/testJDK/",returnStdout: true).trim()"
               TEST_JDK = "${BASE}" + '/testJDK/' + "${JDK_DIR}"
               TEST_NATIVE_LIB = "${BASE}" + '/test/' + "${params.test_suite}" + '/jtreg/native'
               JT_JAVA = "${TEST_JDK}"
             }
             steps {
                 script {
+                    sh "ls -l ${BASE}/sapmachine/test/${TEST_SUITE}"
                     sh "${JT_HOME}/bin/jtreg -dir:${BASE}/sapmachine/test/${TEST_SUITE} -xml -verbose:summary \
                     -exclude:${BASE}/sapmachine/test/${TEST_SUITE}/ProblemList.txt -exclude:${BASE}/sapmachine/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
                     -conc:auto -vmoption:-Xmx640m \
