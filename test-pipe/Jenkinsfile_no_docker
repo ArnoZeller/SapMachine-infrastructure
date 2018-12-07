@@ -34,7 +34,7 @@ pipeline {
               BASE_ = "sh(script: 'pwd',returnStdout: true).trim()"
               BASE = "{BASE_}"
               JDK_DIR_ = sh(script: "ls ${BASE}/testJDK/",returnStdout: true).trim()
-              JDK_DIR_ = "{JDK_DIR_}"
+              JDK_DIR = "{JDK_DIR_}"
               JT_HOME = "${BASE}/sapmachine/jtreg"
               TEST_JDK = "${BASE}" + '/testJDK/' + "${JDK_DIR}"
               TEST_NATIVE_LIB = "${BASE}" + '/test/' + "${params.test_suite}" + '/jtreg/native'
