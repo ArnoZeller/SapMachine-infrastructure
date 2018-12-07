@@ -29,20 +29,21 @@ pipeline {
         stage('Run jtreg') {
             environment {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
-              TEST_GROUPS = '${params.test_groups}'
-              TEST_SUITE = '${params.test_suite}'
+              TEST_GROUPS = "${params.test_groups}"
+              TEST_SUITE = "${params.test_suite}"
             }
             steps {
                 sh '''
 		    env
-		    JT_HOME=${TESTDIR}/jtreg
-		    TEST_JDK=`pwd`/testJDK/"$(ls)"
-                    TEST_NATIVE_LIB=${TESTDIR}/test/${TEST_SUITE}/jtreg/native
+		    BASE=`pwd`
+		    JT_HOME=${BASE}/sapmachine/jtreg
+		    TEST_JDK="(ls ${BASE}/testJDK/)"
+                    TEST_NATIVE_LIB=${BASE}/test/${TEST_SUITE}/jtreg/native
 		    export PATH=${TEST_JDK}:$PATH
                     export JT_JAVA=${TEST_JDK}
                     export JAVA_HOME=${TEST_JDK}
-        	    ${JT_HOME}/bin/jtreg -dir:${TESTDIR}/test/${TEST_SUITE} -xml -verbose:summary \
-                    -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList.txt -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
+        	    ${JT_HOME}/bin/jtreg -dir:${BASE}/sapmachine/test/${TEST_SUITE} -xml -verbose:summary \
+                    -exclude:${BASE}/sapmachine/test/${TEST_SUITE}/ProblemList.txt -exclude:${BASE}/sapmachine/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
                     -conc:auto -vmoption:-Xmx640m \
                     -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:${TEST_JDK} ${TEST_GROUPS} 
                 '''
