@@ -35,14 +35,14 @@ pipeline {
             steps {
                 sh """
                     echo ${params.test_groups}
-					echo \${TEST_GROUPS}
-					BASE=`pwd`
+                    echo \${TEST_GROUPS}
+                    BASE=`pwd`
                     JDK_DIR=`ls \${BASE}/testJDK/`
                     JT_HOME=\${BASE}/sapmachine/jtreg
                     TEST_JDK=\${BASE}/testJDK/\${JDK_DIR}
                     TEST_NATIVE_LIB=\${BASE}/test/${params.test_suite}/jtreg/native
                     JT_JAVA=\${TEST_JDK}
-                    \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/\${params.test_suite} -xml -verbose:summary \\
+                    \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/${params.test_suite} -xml -verbose:summary \\
                     -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList.txt \\
                     -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList-SapMachine.txt \\
                     -conc:auto -vmoption:-Xmx640m \\
