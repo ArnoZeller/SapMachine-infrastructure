@@ -5,10 +5,10 @@ pipeline {
     stages {
         stage('Checkout') {
             def gitRepo
-            if (params.containsKey('SAPMACHINE_GIT_REPOSITORY') {
-              gitRepo=params.SAPMACHINE_GIT_REPOSITORY
+            if (params.containsKey('SAPMACHINE_GIT_REPOSITORY')) {
+              gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
             } else {
-              gitRepo='http://github.com/SAP/SapMachine.git'
+              gitRepo = 'http://github.com/SAP/SapMachine.git'
             }
 
 
