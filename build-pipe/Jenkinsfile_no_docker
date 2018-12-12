@@ -8,20 +8,19 @@ pipeline {
                 script {
                     def gitRepo = 'http://github.com/SAP/SapMachine.git'
                     if (params.containsKey('SAPMACHINE_GIT_REPOSITORY')) {
-                        gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
+                        def gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
                     }
                 }
 
-                 checkout(
-                     [$class: 'GitSCM',
-                     branches: [[name: 'sapmachine11']],
-                     doGenerateSubmoduleConfigurations: false,
-                     extensions: [],
-                     submoduleCfg: [],
-                     userRemoteConfigs: [[credentialsId: 'SapMachine-github', url: "$gitRepo"]]
-                     ]
-                 )
-
+                checkout(
+                    [$class: 'GitSCM',
+                    branches: [[name: 'sapmachine11']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'SapMachine-github', url: "$gitRepo"]]
+                    ]
+                )
              }
         }
         stage('Build') {
