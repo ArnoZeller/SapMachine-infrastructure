@@ -4,6 +4,7 @@ pipeline {
     }
     stages {
         stage('Checkout') {
+            steps {
             def gitRepo
             if (params.containsKey('SAPMACHINE_GIT_REPOSITORY')) {
               gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
@@ -22,8 +23,7 @@ pipeline {
                  ]
              )
 
-
-checkout([$class: 'GitSCM', branches: [[name: 'sapmachine11']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: 'SapMachine-github', url: 'https://github.com/SAP/SapMachine.git']]])
+            }
 
         }
         stage('Build') {
