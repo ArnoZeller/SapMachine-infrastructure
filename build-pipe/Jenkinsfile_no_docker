@@ -5,13 +5,14 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
+            script {
             def gitRepo
             if (params.containsKey('SAPMACHINE_GIT_REPOSITORY')) {
               gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
             } else {
               gitRepo = 'http://github.com/SAP/SapMachine.git'
             }
-
+            }
 
             checkout(
                  [$class: 'GitSCM',
