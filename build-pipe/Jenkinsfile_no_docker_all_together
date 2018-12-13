@@ -24,21 +24,6 @@ pipeline {
                 }
             }
         }
-        stage('Archive') {
-            steps {
-                archive 'build.tar.gz'
-                archive 'test.zip'
-                archive 'apidocs.zip'
-
-                script {
-                    def jdk_bundle_name = readFile "${env.WORKSPACE}/jdk_bundle_name.txt"
-                    def jre_bundle_name = readFile "${env.WORKSPACE}/jre_bundle_name.txt"
-
-                    step ([$class: 'ArtifactArchiver', artifacts: jdk_bundle_name]);
-                    step ([$class: 'ArtifactArchiver', artifacts: jre_bundle_name]);
-                }
-            }
-        }
         stage('Copy JTREG Artifacts') {
             steps {
                 script {
@@ -59,6 +44,21 @@ pipeline {
                 sh "ls"
                 sh "ls SapMaschine/build"
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine/build`ls SapMachine/build/` -h `pwd`/jtreg/jtreg -s hotspot ${params.hotspot_test_groups}  || true"
+            }
+        }
+        stage('Archive') {
+            steps {
+                archive 'build.tar.gz'
+                archive 'test.zip'
+                archive 'apidocs.zip'
+
+                script {
+                    def jdk_bundle_name = readFile "${env.WORKSPACE}/jdk_bundle_name.txt"
+                    def jre_bundle_name = readFile "${env.WORKSPACE}/jre_bundle_name.txt"
+
+                    step ([$class: 'ArtifactArchiver', artifacts: jdk_bundle_name]);
+                    step ([$class: 'ArtifactArchiver', artifacts: jre_bundle_name]);
+                }
             }
         }
         stage('Publish jtreg hotspot report') {
