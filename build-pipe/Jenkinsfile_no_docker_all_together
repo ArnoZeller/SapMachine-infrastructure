@@ -127,7 +127,7 @@ pipeline {
     /*
     post {
         always {
-            cleanWs deleteDirs: true, disableDeferredWipeout: true, skipWhenFailed: true
+            cleanWs deleteDirs: true, disableDeferredWipeout: true
         }
     }
     */
