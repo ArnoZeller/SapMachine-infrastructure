@@ -1,6 +1,14 @@
 pipeline {
     agent {
         label params.AGENT_LABEL
+        when {
+            expression { params.contains('DOCKER_DIR') }
+        }
+        dockerfile {
+            label params.AGENT_LABEL
+            dir params.DOCKER_DIR
+            reuseNode true
+        }
     }
     stages {
         stage('Build') {
