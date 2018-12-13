@@ -45,9 +45,9 @@ pipeline {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
                     filter: "jtreg.zip",
-                    target: 'sapmachine']);
+                    target: 'jtreg']);
                 }
-                sh 'cd sapmachine && unzip jtreg.zip'
+                sh 'cd jtreg && unzip jtreg.zip'
             }
         }
         stage('Run jtreg hotspot') {
@@ -55,7 +55,10 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
             }
             steps {
-                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine/build`ls /SapMachine/build/` -h `pwd`/sapmachine/jtreg -s hotspot ${params.hotspot_test_groups}  || true"
+                sh "echo `pwd`"
+                sh "ls"
+                sh "ls SapMaschine/build"
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine/build`ls SapMachine/build/` -h `pwd`/jtreg/jtreg -s hotspot ${params.hotspot_test_groups}  || true"
             }
         }
         stage('Publish jtreg hotspot report') {
