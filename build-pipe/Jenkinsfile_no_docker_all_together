@@ -43,7 +43,7 @@ pipeline {
                 sh "echo `pwd`"
                 sh "ls SapMachine || true "
                 sh "ls SapMachine/build || true"
-                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine/build/`ls SapMachine/build/` -h `pwd`/jtreg/jtreg -s hotspot ${params.hotspot_test_groups}  || true"
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine` -h `pwd`/jtreg/jtreg -s hotspot ${params.hotspot_test_groups}  || true"
             }
         }
         stage('Publish jtreg hotspot report') {
