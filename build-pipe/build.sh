@@ -180,5 +180,5 @@ echo "${JRE_BUNDLE_NAME}" > "${WORKSPACE}/jre_bundle_name.txt"
 
 cp ../test-results/$GTEST_RESULT_PATH/gtest.xml "${WORKSPACE}"
 
-cd "${WORKSPACE}/SapMachine"
-tar czf "${WORKSPACE}/build.tar.gz" build
+#cd "${WORKSPACE}/SapMachine"
+#tar czf "${WORKSPACE}/build.tar.gz" build
