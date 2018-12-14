@@ -47,16 +47,15 @@ pipeline {
             }
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
-                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: true,
                     reportDir: "test_report_${env.TESTSUITE}",
                     reportFiles: 'JTreport/index.html',
-                    reportName: 'JT Report'
+                    reportName: "JT Report ${env.TESTSUITE}"
                 ]
-                junit "junit_report_${env.TESTSUITE}.xml"
+                junit "test_report_${env.TESTSUITE}/JTwork/**/*.jtr.xml"
                 archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
@@ -67,7 +66,6 @@ pipeline {
             }
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
-                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
             
                 publishHTML target: [
                     allowMissing: false,
@@ -75,9 +73,9 @@ pipeline {
                     keepAll: true,
                     reportDir: "test_report_${env.TESTSUITE}",
                     reportFiles: 'JTreport/index.html',
-                    reportName: 'JT Report'
+                    reportName: "JT Report ${env.TESTSUITE}"
                 ]
-                junit "junit_report_${env.TESTSUITE}.xml"
+                junit "test_report_${env.TESTSUITE}/JTwork/**/*.jtr.xml"
                 archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
@@ -88,7 +86,6 @@ pipeline {
             }
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
-                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
             
                 publishHTML target: [
                     allowMissing: false,
@@ -96,9 +93,9 @@ pipeline {
                     keepAll: true,
                     reportDir: "test_report_${env.TESTSUITE}",
                     reportFiles: 'JTreport/index.html',
-                    reportName: 'JT Report'
+                    reportName: "JT Report ${env.TESTSUITE}"
                 ]
-                junit "junit_report_${env.TESTSUITE}.xml"
+                junit "test_report_${env.TESTSUITE}/JTwork/**/*.jtr.xml"
                 archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
