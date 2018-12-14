@@ -42,18 +42,18 @@ pipeline {
               GROUPS = "${params.hotspot_test_groups}"
             }
             steps {
-                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${ENV.TESTSUITE} ${ENV.GROUPS}  || true"
-                sh "python lib/jtreg_to_junit.py test_report_${ENV.TESTSUITE}/JTreport/text/summary.txt junit_report_${ENV.TESTSUITE}.xml \"${ENV.TESTSUITE}/${ENV.GROUPS}\""
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
+                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
             publishHTML target: [
                 allowMissing: false,
                 alwaysLinkToLastBuild: false,
                 keepAll: true,
-                reportDir: "test_report_${ENV.TESTSUITE}",
+                reportDir: "test_report_${env.TESTSUITE}",
                 reportFiles: 'JTreport/index.html',
                 reportName: 'JT Report'
             ]
-            junit 'junit_report_${ENV.TESTSUITE}.xml'
-            archive "test_report_${ENV.TESTSUITE}/JTwork/**/hs_err_pid*.log"
+            junit 'junit_report_${env.TESTSUITE}.xml'
+            archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
         stage('Run jtreg langtools') {
@@ -62,19 +62,19 @@ pipeline {
               GROUPS = "${params.langtools_test_groups}"
             }
             steps {
-                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${ENV.TESTSUITE} ${ENV.GROUPS}  || true"
-                sh "python lib/jtreg_to_junit.py test_report_${ENV.TESTSUITE}/JTreport/text/summary.txt junit_report_${ENV.TESTSUITE}.xml \"${ENV.TESTSUITE}/${ENV.GROUPS}\""
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
+                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
             
                 publishHTML target: [
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: true,
-                    reportDir: "test_report_${ENV.TESTSUITE}",
+                    reportDir: "test_report_${env.TESTSUITE}",
                     reportFiles: 'JTreport/index.html',
                     reportName: 'JT Report'
                 ]
-                junit 'junit_report_${ENV.TESTSUITE}.xml'
-                archive "test_report_${ENV.TESTSUITE}/JTwork/**/hs_err_pid*.log"
+                junit 'junit_report_${env.TESTSUITE}.xml'
+                archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
         stage('Archive') {
