@@ -12,10 +12,10 @@ pipeline {
                     filter: "test.zip",
                     target: 'sapmachine']);
                 }
-                sh 'cd sapmachine && unzip test.zip'
+                sh 'cd sapmachine && unzip -q test.zip'
                 sh '''
                     BUNDLE=`ls sapmachine/bundles/*jdk-*`
-                    unzip "${BUNDLE}" -d testJDK
+                    unzip -q "${BUNDLE}" -d testJDK
                 '''
                 script {
                     step ([$class: 'CopyArtifact',
@@ -23,7 +23,7 @@ pipeline {
                     filter: "jtreg.zip",
                     target: 'sapmachine']);
                 }
-                sh 'cd sapmachine && unzip jtreg.zip'
+                sh 'cd sapmachine && unzip -q jtreg.zip'
             }
         }
         stage('Run jtreg') {
@@ -31,32 +31,27 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
             }
             steps {
-                sh '''
-        			TEST_GROUPS=${params.test_groups}
-					TEST_SUITE=${params.test_suite}
-        			JT_HOME=${TESTDIR}/jtreg
-        			TEST_JDK=`pwd`/testJDK/"$(ls)"
-        			TEST_NATIVE_LIB=${TESTDIR}/test/${TEST_SUITE}/jtreg/native
-        			export PATH=${TEST_JDK}:$PATH
-                    export JT_JAVA=${TEST_JDK}
-                    export JAVA_HOME=${TEST_JDK}
-        			
-        			${JT_HOME}/bin/jtreg -dir:${TESTDIR}/test/${TEST_SUITE} -xml -verbose:summary \
-                    -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList.txt -exclude:${TESTDIR}/test/${TEST_SUITE}/ProblemList-SapMachine.txt \
-                    -conc:auto -vmoption:-Xmx640m \
-                    -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:${TEST_JDK} ${TEST_GROUPS} 
-                '''
-			}
+                sh """
+                    BASE=`pwd`
+                    JDK_DIR=`ls \${BASE}/testJDK/`
+                    JT_HOME=\${BASE}/sapmachine/jtreg
+                    TEST_JDK=\${BASE}/testJDK/\${JDK_DIR}
+                    TEST_NATIVE_LIB=\${BASE}/test/${params.test_suite}/jtreg/native
+                    JT_JAVA=\${TEST_JDK}
+                    \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/${params.test_suite} -xml -verbose:summary \\
+                    -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList.txt \\
+                    -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList-SapMachine.txt \\
+                    -conc:auto -vmoption:-Xmx640m \\
+                    -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:\${TEST_JDK} ${params.test_groups}
+                """
+            }
         }
         stage('Publish jtreg report') {
             steps {
                 junit 'JTwork/**/*.jtr.xml'
                 sh '''
-                    ls -l
                     mkdir test_report
-                    ls -l
                     mv JTreport test_report
-                    ls -l test_report/*
                     mv JTwork test_report
                 '''
 
@@ -69,14 +64,13 @@ pipeline {
                     reportName: 'JT Report'
                 ]
 
-
                 archive 'JTwork/**/hs_err_pid*.log'
             }
         }
     }
     post {
         always {
-            cleanWs deleteDirs: true, disableDeferredWipeout: true, skipWhenFailed: true
+            cleanWs deleteDirs: true, disableDeferredWipeout: true
         }
     }
 }

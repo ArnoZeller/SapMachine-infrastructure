@@ -3,6 +3,26 @@ pipeline {
         label params.AGENT_LABEL
     }
     stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    def gitRepo = 'http://github.com/SAP/SapMachine.git'
+                    if (params.containsKey('SAPMACHINE_GIT_REPOSITORY')) {
+                        def gitRepo = $params.SAPMACHINE_GIT_REPOSITORY
+                    }
+                }
+
+                checkout(
+                    [$class: 'GitSCM',
+                    branches: [[name: 'sapmachine11']],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [],
+                    submoduleCfg: [],
+                    userRemoteConfigs: [[credentialsId: 'SapMachine-github', url: "$gitRepo"]]
+                    ]
+                )
+             }
+        }
         stage('Build') {
             environment {
               SAPMACHINE_PUBLISH_GITHUB_TOKEN = credentials('SapMachine-Github-Token')
