@@ -44,16 +44,37 @@ pipeline {
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
                 sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
-            publishHTML target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: "test_report_${env.TESTSUITE}",
-                reportFiles: 'JTreport/index.html',
-                reportName: 'JT Report'
-            ]
-            junit 'junit_report_${env.TESTSUITE}.xml'
-            archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: "test_report_${env.TESTSUITE}",
+                    reportFiles: 'JTreport/index.html',
+                    reportName: 'JT Report'
+                ]
+                junit "junit_report_${env.TESTSUITE}.xml"
+                archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
+            }
+        }
+        stage('Run jtreg jdk') {
+            environment {
+              TESTSUITE = 'jdk'
+              GROUPS = "${params.jdk_test_groups}"
+            }
+            steps {
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${env.TESTSUITE} ${env.GROUPS}  || true"
+                sh "python lib/jtreg_to_junit.py test_report_${env.TESTSUITE}/JTreport/text/summary.txt junit_report_${env.TESTSUITE}.xml \"${env.TESTSUITE}/${env.GROUPS}\""
+            
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: "test_report_${env.TESTSUITE}",
+                    reportFiles: 'JTreport/index.html',
+                    reportName: 'JT Report'
+                ]
+                junit "junit_report_${env.TESTSUITE}.xml"
+                archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
         stage('Run jtreg langtools') {
@@ -73,7 +94,7 @@ pipeline {
                     reportFiles: 'JTreport/index.html',
                     reportName: 'JT Report'
                 ]
-                junit 'junit_report_${env.TESTSUITE}.xml'
+                junit "junit_report_${env.TESTSUITE}.xml"
                 archive "test_report_${env.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
         }
