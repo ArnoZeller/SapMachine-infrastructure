@@ -44,7 +44,6 @@ pipeline {
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${ENV.TESTSUITE} ${ENV.GROUPS}  || true"
                 sh "python lib/jtreg_to_junit.py test_report_${ENV.TESTSUITE}/JTreport/text/summary.txt junit_report_${ENV.TESTSUITE}.xml \"${ENV.TESTSUITE}/${ENV.GROUPS}\""
-            }
             publishHTML target: [
                 allowMissing: false,
                 alwaysLinkToLastBuild: false,
@@ -55,6 +54,7 @@ pipeline {
             ]
             junit 'junit_report_${ENV.TESTSUITE}.xml'
             archive "test_report_${ENV.TESTSUITE}/JTwork/**/hs_err_pid*.log"
+            }
         }
         stage('Run jtreg langtools') {
             environment {
@@ -64,17 +64,18 @@ pipeline {
             steps {
                 sh "bash test-pipe/run_jtreg.sh -l `pwd`/SapMachine -h `pwd`/jtreg/jtreg -s ${ENV.TESTSUITE} ${ENV.GROUPS}  || true"
                 sh "python lib/jtreg_to_junit.py test_report_${ENV.TESTSUITE}/JTreport/text/summary.txt junit_report_${ENV.TESTSUITE}.xml \"${ENV.TESTSUITE}/${ENV.GROUPS}\""
+            
+                publishHTML target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: "test_report_${ENV.TESTSUITE}",
+                    reportFiles: 'JTreport/index.html',
+                    reportName: 'JT Report'
+                ]
+                junit 'junit_report_${ENV.TESTSUITE}.xml'
+                archive "test_report_${ENV.TESTSUITE}/JTwork/**/hs_err_pid*.log"
             }
-            publishHTML target: [
-                allowMissing: false,
-                alwaysLinkToLastBuild: false,
-                keepAll: true,
-                reportDir: "test_report_${ENV.TESTSUITE}",
-                reportFiles: 'JTreport/index.html',
-                reportName: 'JT Report'
-            ]
-            junit 'junit_report_${ENV.TESTSUITE}.xml'
-            archive "test_report_${ENV.TESTSUITE}/JTwork/**/hs_err_pid*.log"
         }
         stage('Archive') {
             steps {
