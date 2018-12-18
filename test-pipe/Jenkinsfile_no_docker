@@ -3,27 +3,31 @@ pipeline {
         label params.AGENT_LABEL
     }
     stages {
+        stage('Prepare') {
+            environment {
+              SAPMACHINE_GIT_REPO = 'github.com/SAP/SapMachine.git'
+            }
+            steps {
+                sh 'bash test-pipe/test_jtreg_prepare.sh'
+            }
+        }
         stage('Copy Artifacts') {
             steps {
                 script {
                     step ([$class: 'CopyArtifact',
                     selector: buildParameter("${BUILD_SELECTOR}"),
                     projectName: JDK_BUILD_JOB,
-                    filter: "test.zip",
+                    filter: "build.tar.gz",
                     target: 'sapmachine']);
                 }
-                sh 'cd sapmachine && unzip -q test.zip'
-                sh '''
-                    BUNDLE=`ls sapmachine/bundles/*jdk-*`
-                    unzip -q "${BUNDLE}" -d testJDK
-                '''
+                sh 'cd sapmachine && tar xzf build.tar.gz'
                 script {
                     step ([$class: 'CopyArtifact',
                     projectName: 'jtreg',
                     filter: "jtreg.zip",
                     target: 'sapmachine']);
                 }
-                sh 'cd sapmachine && unzip -q jtreg.zip'
+                sh 'cd sapmachine && unzip jtreg.zip'
             }
         }
         stage('Run jtreg') {
@@ -31,19 +35,7 @@ pipeline {
               SCIMARK_2_CP = '/opt/scimark2/scimark2lib.jar'
             }
             steps {
-                sh """
-                    BASE=`pwd`
-                    JDK_DIR=`ls \${BASE}/testJDK/`
-                    JT_HOME=\${BASE}/sapmachine/jtreg
-                    TEST_JDK=\${BASE}/testJDK/\${JDK_DIR}
-                    TEST_NATIVE_LIB=\${BASE}/test/${params.test_suite}/jtreg/native
-                    JT_JAVA=\${TEST_JDK}
-                    \${JT_HOME}/bin/jtreg -dir:\${BASE}/sapmachine/test/${params.test_suite} -xml -verbose:summary \\
-                    -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList.txt \\
-                    -exclude:\${BASE}/sapmachine/test/${params.test_suite}/ProblemList-SapMachine.txt \\
-                    -conc:auto -vmoption:-Xmx640m \\
-                    -a -ignore:quiet -timeoutFactor:5 -agentvm -testjdk:\${TEST_JDK} ${params.test_groups}
-                """
+                sh "bash test-pipe/run_jtreg.sh -l `pwd`/sapmachine -h `pwd`/sapmachine/jtreg -s ${params.test_suite} ${params.test_groups}  || true"
             }
         }
         stage('Publish jtreg report') {
